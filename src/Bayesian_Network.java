@@ -6,4 +6,6 @@ public class Bayesian_Network {
 		
 		return probability;
 	}
+	
+	
 }
