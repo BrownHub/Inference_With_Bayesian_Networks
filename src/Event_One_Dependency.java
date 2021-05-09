@@ -16,7 +16,6 @@ public class Event_One_Dependency extends Event {
 	
 	@Override
 	public double[] get_probabilities() {
-		// TODO Auto-generated method stub
 		double[] probabilities;
 		
 		if (this.is_set) {
@@ -25,8 +24,10 @@ public class Event_One_Dependency extends Event {
 				probabilities = new double[1];
 				
 				if (this.is_true) {
+					//event is true
 					probabilities[0] = this.probability_table.get(dependency.get_is_true());
 				} else {
+					//event is false
 					probabilities[0] = 1 - this.probability_table.get(dependency.get_is_true());
 				}
 				
@@ -35,10 +36,14 @@ public class Event_One_Dependency extends Event {
 				probabilities = new double[2];
 				
 				if (this.is_true) {
+					//event is true / dependency is true
 					probabilities[0] = this.probability_table.get(true);
+					//event is true / dependency is false
 					probabilities[1] = this.probability_table.get(false);
 				} else {
+					//event is false / dependency is true
 					probabilities[0] = 1 - this.probability_table.get(true);
+					//event is false / dependency is false
 					probabilities[1] = 1 - this.probability_table.get(false);
 				}
 			}
@@ -48,16 +53,22 @@ public class Event_One_Dependency extends Event {
 			if (this.dependency.get_is_set()) {
 				probabilities = new double[2];
 				
+				// event is true / dependency is known
 				probabilities[0] = this.probability_table.get(dependency.get_is_true());
+				// event is false / dependency is known
 				probabilities[1] = 1 - this.probability_table.get(dependency.get_is_true());
 
 			} else {
 				//probabilities of this event if neither it nor its dependency is known
 				probabilities = new double[4];
 				
+				// event is true / dependency is true
 				probabilities[0] = this.probability_table.get(true);
+				// event is false / dependency is true
 				probabilities[1] = 1 - this.probability_table.get(true);
+				// event is true / dependency is false
 				probabilities[2] = this.probability_table.get(false);
+				// event is false / dependency is false
 				probabilities[3] = 1 - this.probability_table.get(false);
 				
 			}
