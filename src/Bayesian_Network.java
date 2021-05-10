@@ -36,18 +36,16 @@ public class Bayesian_Network {
 		probabilities_to_be_summed = new ArrayList<Double>();
 	}
 
-	public Bayesian_Network generate_instance() {
+	public static Bayesian_Network generate_instance() {
 		instance = new Bayesian_Network();
 		
 		return instance;
 	}
 	
-	public Bayesian_Network get_current_network() {
+	public static Bayesian_Network get_current_network() {
 		return instance;
 	}
 	
-	
-
 	public double compute_probability(Boolean b, Boolean e, Boolean a, Boolean j, Boolean m) {
 		Boolean[] event_values = new Boolean[num_events];
 		event_values[0] = b;
@@ -73,12 +71,35 @@ public class Bayesian_Network {
 		
 	}
 	
-	public void get_probabilities() {
-		int index = 0;
+	public double compute_given_probability(Boolean b, Boolean e, Boolean a, Boolean j, Boolean m) {
+		Boolean[] event_values = new Boolean[num_events];
+		event_values[0] = b;
+		event_values[1] = e;
+		event_values[2] = a;
+		event_values[3] = j;
+		event_values[4] = m;
 		
-		for (Event event : events) {
-			event_probabilities[index] = event.get_probabilities();
-			index++;
+		initialize_given_events(event_values);
+		generate_probabilities_to_sum(0, 1);
+		double probability = sum_probabilities();
+		
+		return probability;
+	}
+	
+	public void initialize_given_events(Boolean[] event_values) {
+		for (int i = 0; i < num_events; i++) {
+			if (event_values[i] != null) {
+				events[i].set_is_given(true);
+				events[i].set_is_true(event_values[i]);
+			}
+		}
+		
+	}
+	
+	public void get_probabilities() {
+		for (int i = 0; i < num_events; i++) {
+			Event event = events[i];
+			event_probabilities[i] = event.get_probabilities();
 		}
 	}
 	

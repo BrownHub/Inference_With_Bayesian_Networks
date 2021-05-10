@@ -27,7 +27,6 @@ public class Event_Two_Dependencies extends Event{
 
 	@Override
 	public double[] get_probabilities() {
-		// TODO Auto-generated method stub
 		double[] probabilities;
 		
 		if (this.is_set) {
