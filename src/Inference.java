@@ -146,7 +146,7 @@ public class Inference {
 	
 	public static double calculate_event_probability(Bayesian_Network network) {
 		double probability = network.compute_probability(burglary_set, earthquake_set, alarm_set, john_calls_set, mary_calls_set);
-		double given_probability = network.compute_given_probability(burglary_given, earthquake_given, alarm_given, john_calls_given, mary_calls_given);
+		double given_probability = network.compute_probability(burglary_given, earthquake_given, alarm_given, john_calls_given, mary_calls_given);
 		
 		double event_probability = probability / given_probability;
 		
