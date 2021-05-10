@@ -1,7 +1,7 @@
 import java.util.Map;
 
 public abstract class Event {
-	protected boolean is_true;
+	protected Boolean is_true;
 	protected boolean is_set;
 	protected boolean is_given;
 	
