@@ -12,6 +12,8 @@ public class Inference {
 	public static Boolean john_calls_given;
 	public static Boolean mary_calls_given;
 	
+	public static boolean given = false;
+	
 	public static boolean error;
 	
 
@@ -39,11 +41,12 @@ public class Inference {
 		int parameter_count = 0;
 		int given_count = 0;
 		
-		for (int i = index; i < arguments.length; i++) {
-			String argument = arguments[i];
+		for (index = 0; index < arguments.length; index++) {
+			String argument = arguments[index];
 			
-			if (argument == "given") {
-				index = i++;
+			if (argument.equals("given")) {
+				given = true;
+				index++;
 				break;
 			}
 			
@@ -57,23 +60,53 @@ public class Inference {
 			switch (formatted_argument.charAt(0)) {
 			
 			case 'B':
-				event_info(formatted_argument, burglary_set);
+				if (formatted_argument.charAt(1) == 'T') {
+					burglary_set = true;
+				} else if (formatted_argument.charAt(1) == 'F') {
+					burglary_set = false;
+				} else {
+					usage_error();
+				}
 				break;
 				
 			case 'E':
-				event_info(formatted_argument, earthquake_set);
+				if (formatted_argument.charAt(1) == 'T') {
+					earthquake_set = true;
+				} else if (formatted_argument.charAt(1) == 'F') {
+					earthquake_set = false;
+				} else {
+					usage_error();
+				}
 				break;
 				
 			case 'A':
-				event_info(formatted_argument, alarm_set);
+				if (formatted_argument.charAt(1) == 'T') {
+					alarm_set = true;
+				} else if (formatted_argument.charAt(1) == 'F') {
+					alarm_set = false;
+				} else {
+					usage_error();
+				}
 				break;
 				
 			case 'J':
-				event_info(formatted_argument, john_calls_set);
+				if (formatted_argument.charAt(1) == 'T') {
+					john_calls_set = true;
+				} else if (formatted_argument.charAt(1) == 'F') {
+					john_calls_set = false;
+				} else {
+					usage_error();
+				}
 				break;
 				
 			case 'M':
-				event_info(formatted_argument, mary_calls_set);
+				if (formatted_argument.charAt(1) == 'T') {
+					mary_calls_set = true;
+				} else if (formatted_argument.charAt(1) == 'F') {
+					mary_calls_set = false;
+				} else {
+					usage_error();
+				}
 				break;
 				
 			default:
@@ -99,23 +132,53 @@ public class Inference {
 			switch (formatted_argument.charAt(0)) {
 			
 			case 'B':
-				event_info(formatted_argument, burglary_given);
+				if (formatted_argument.charAt(1) == 'T') {
+					burglary_given = true;
+				} else if (formatted_argument.charAt(1) == 'F') {
+					burglary_given = false;
+				} else {
+					usage_error();
+				}
 				break;
 				
 			case 'E':
-				event_info(formatted_argument, earthquake_given);
+				if (formatted_argument.charAt(1) == 'T') {
+					earthquake_given = true;
+				} else if (formatted_argument.charAt(1) == 'F') {
+					earthquake_given = false;
+				} else {
+					usage_error();
+				}
 				break;
 				
 			case 'A':
-				event_info(formatted_argument, alarm_given);
+				if (formatted_argument.charAt(1) == 'T') {
+					alarm_given = true;
+				} else if (formatted_argument.charAt(1) == 'F') {
+					alarm_given = false;
+				} else {
+					usage_error();
+				}
 				break;
 				
 			case 'J':
-				event_info(formatted_argument, john_calls_given);
+				if (formatted_argument.charAt(1) == 'T') {
+					john_calls_given = true;
+				} else if (formatted_argument.charAt(1) == 'F') {
+					john_calls_given = false;
+				} else {
+					usage_error();
+				}
 				break;
 				
 			case 'M':
-				event_info(formatted_argument, mary_calls_given);
+				if (formatted_argument.charAt(1) == 'T') {
+					mary_calls_given = true;
+				} else if (formatted_argument.charAt(1) == 'F') {
+					mary_calls_given = false;
+				} else {
+					usage_error();
+				}
 				break;
 				
 			default:
@@ -134,21 +197,17 @@ public class Inference {
 		
 	}
 	
-	public static void event_info(String argument, Boolean event) {
-		if (argument.charAt(1) == 'T') {
-			event = true;
-		} else if (argument.charAt(1) == 'F') {
-			event = false;
-		} else {
-			usage_error();
-		}
-	}
-	
 	public static double calculate_event_probability(Bayesian_Network network) {
-		double probability = network.compute_probability(burglary_set, earthquake_set, alarm_set, john_calls_set, mary_calls_set);
-		double given_probability = network.compute_probability(burglary_given, earthquake_given, alarm_given, john_calls_given, mary_calls_given);
+		double event_probability;
 		
-		double event_probability = probability / given_probability;
+		if (given) {
+			double probability = network.compute_probability(burglary_set, earthquake_set, alarm_set, john_calls_set, mary_calls_set);
+			double given_probability = network.compute_probability(burglary_given, earthquake_given, alarm_given, john_calls_given, mary_calls_given);
+
+			event_probability = probability / given_probability;
+		} else {
+			event_probability = network.compute_probability(burglary_set, earthquake_set, alarm_set, john_calls_set, mary_calls_set);
+		}
 		
 		return event_probability;
 	}

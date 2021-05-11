@@ -2,9 +2,20 @@
 public class Event_No_Dependencies extends Event {
 	private double probability;
 	
-	public Event_No_Dependencies(double probability) {
+	public Event_No_Dependencies(char name, double probability) {
 		super();
 		this.probability = probability;
+		this.event_name = name;
+	}
+	
+	@Override
+	public void set_dependencies(char name, boolean true_false) {
+		//Intentionally blank
+	}
+	
+	@Override
+	public void reset_dependencies() {
+		//Intentionally blank
 	}
 
 	@Override

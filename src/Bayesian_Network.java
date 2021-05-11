@@ -10,17 +10,17 @@ public class Bayesian_Network {
 	public Bayesian_Network() {
 		super();
 		
-		Event burglary = new Event_No_Dependencies(0.001);
-		Event earthquake = new Event_No_Dependencies(0.002);
+		Event burglary = new Event_No_Dependencies('B', 0.001);
+		Event earthquake = new Event_No_Dependencies('E', 0.002);
 		
 		double[] alarm_probabilities = {0.95, 0.94, 0.29, 0.001};
-		Event alarm = new Event_Two_Dependencies(alarm_probabilities, burglary, earthquake);
+		Event alarm = new Event_Two_Dependencies('A', alarm_probabilities, burglary, earthquake);
 		
 		double[] john_probabilities = {0.9, 0.05};
-		Event john_calls = new Event_One_Dependency(john_probabilities, alarm);
+		Event john_calls = new Event_One_Dependency('J', john_probabilities, alarm);
 		
 		double[] mary_probabilities = {0.7, 0.01};
-		Event mary_calls = new Event_One_Dependency(mary_probabilities, alarm);
+		Event mary_calls = new Event_One_Dependency('M', mary_probabilities, alarm);
 		
 		num_events = 5;
 		
@@ -55,8 +55,10 @@ public class Bayesian_Network {
 		event_values[4] = m;
 		
 		initialize_events(event_values);
-		generate_probabilities_to_sum(0, 1);
+		get_probabilities();
+		generate_probabilities_to_sum(-1, 1);
 		double probability = sum_probabilities();
+		reset_events();
 		
 		return probability;
 	}
@@ -69,11 +71,20 @@ public class Bayesian_Network {
 			}
 		}
 		
+		for (Event event : events) {
+			for (Event dependency : events) {
+				if (dependency.get_is_set()) {
+					event.set_dependencies(dependency.get_name(), dependency.get_is_true());
+				}
+			}
+		}
+		
 	}
 
 	public void reset_events() {
 		for (int i = 0; i < num_events; i++) {
 			events[i].set_event(false);
+			events[i].reset_dependencies();
 		}
 	}
 	
@@ -87,20 +98,24 @@ public class Bayesian_Network {
 	public void generate_probabilities_to_sum(int i, double p) {
 		int index = i;
 		double probability = p;
+		index++;
 		
 		if (index == num_events - 1) {
 			for (double event_probability : event_probabilities[index]) {
 				double temp_probability = event_probability * probability;
 				probabilities_to_be_summed.add(temp_probability);
 			}
+			return;
+			
 		} else {
 			for (double event_probability : event_probabilities[index]) {
 				double temp_probability = event_probability * probability;
-				generate_probabilities_to_sum(index++, temp_probability);
+				generate_probabilities_to_sum(index, temp_probability);
 			}
+			return;
+			
 		}
 		
-		reset_events();
 	}
 	
 	public double sum_probabilities() {
